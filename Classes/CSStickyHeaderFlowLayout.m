@@ -147,6 +147,19 @@ NSString *const CSStickyHeaderParallaxHeader = @"CSStickyHeaderParallexHeader";
             [self updateHeaderAttributes:header lastCellAttributes:lastCells[indexPathKey]];
         }];
     }
+    
+    NSMutableArray *itemsToRemove = [NSMutableArray array];
+    for (UICollectionViewLayoutAttributes *item in allItems) {
+        NSUInteger numberOfRows = [self.collectionView.dataSource
+                                   respondsToSelector:@selector(collectionView:numberOfItemsInSection:)]
+        ? [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:item.indexPath.section] : 0;
+
+        if (item.indexPath.section >= numberOfSections || item.indexPath.row >= numberOfRows) {
+            [itemsToRemove addObject:item];
+        }
+    }
+    
+    [allItems removeObjectsInArray:itemsToRemove];
 
     return allItems;
 }
